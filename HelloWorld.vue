@@ -2,7 +2,6 @@
   <div class="box">
     <div>
       <span>Country:</span>
-      <!-- <input type="text" v-model="country" /><br /><br /> -->
       <select v-model="selected" style="width: 250px">
         <option disabled value="">Select a country</option>
         <option v-for="country in allData" :key="country.index">
@@ -20,7 +19,6 @@
       /><br /><br />
     </div>
     <div><button @click="onClick()">Click</button><br /><br /></div>
-    <!-- {{ selected }} -->
   </div>
 </template>
 
@@ -39,44 +37,46 @@ export default {
   },
   methods: {
     async getData() {
+    
+      // getting data via API
       await axios
         .get("https://countriesnow.space/api/v0.1/countries/capital")
+        
+        // if API sends back a successful response...
         .then((response) => {
           if (
             response.status == 200 &&
             response.data.error == false &&
             response.data.msg == "countries and capitals retrieved"
           ) {
-            //console.log(response.data.data);
-            // const result = response.data.data;
-            // this.allData = result;
-
-            // console.log("Show all data inside array",this.allData);
-            // for(let i in this.allData){
-            //   console.log("Country-",this.allData[i].name);
-            // }
+ 
+            // store the response data in an empty array
             this.allData = response.data.data;
-            //console.log(this.allData.length);
-            //console.log(this.allData[0]);
-            // console.log(this.allData.filter((c) => c.capital == ""));
-            // console.log(this.allData.filter((c) => c.capital != ""));
+
+            // clean the incoming data
+            // discard those objects which don't have capitals
             this.allData = this.allData.filter((c) => c.capital != "");
-            // console.log(typeof response.data.error);
-            // console.log(typeof response.status);
+
           }
         })
+        
+        // handles any error & displays the appropriate message on browser console
         .catch((error) =>
           console.log(error.response.data.msg, "\n", error.message)
         );
     },
     onClick() {
+    
+      // if the user doesn't select a country and directly clicks the button, alert is shown
       if (this.selected == "" || this.selected == null) {
         alert("Please select a country");
-      } else {
+      } 
+      
+      // once the user selects a country, displaying the corresponding capital
+      else {
         const result = this.allData.filter((c) =>
           c.name.includes(this.selected)
         );
-        // console.log("Capital:",result[0].capital);
         this.capital = result[0].capital;
       }
     },
