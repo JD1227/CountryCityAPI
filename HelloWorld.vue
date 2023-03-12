@@ -4,7 +4,7 @@
       <span>Country:</span>
       <select v-model="selected" style="width: 250px">
         <option disabled value="">Select a country</option>
-        <option v-for="country in allData" :key="country.index">
+        <option v-for="country in allData" :key="country.name">
           {{ country.name }}
         </option></select
       ><br /><br />
